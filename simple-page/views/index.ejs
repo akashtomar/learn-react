@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>React-Page</title>
+    <!-- React & ReactDom -->
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        class Row extends React.Component {
+            constructor(props){
+                super(props);
+            }
+            render(){
+                return (
+                    <tbody>
+                    {this.props.content.map((row, i)=>{
+                        return <tr key={i}><td>{i}</td><td>{row.name}</td><td>{row.familyName}</td></tr>;
+                    })}
+                    </tbody>
+                );
+            }
+        }
+
+        
+        class Table extends React.Component {
+            constructor(props){
+                super(props);
+                this.state ={
+                    pageNumber: 1,
+                    page:[]
+                }
+                this.handleNext = this.handleNext.bind(this);
+                this.handlePrev = this.handlePrev.bind(this);
+                
+            }
+            componentDidMount(){
+                console.log("Here!");
+                axios.get('/api/data', {
+                    params: {
+                        pNum: this.state.pageNumber
+                    }
+                }).then((response)=>{
+                    this.setState({page: response.data})
+                });
+            }
+            
+            handlePrev(){
+                console.log("clicked!");
+                axios.get('/api/data', {
+                    params: {
+                    pNum: this.state.pageNumber-1}
+                }).then((response)=>{
+                    this.setState({
+                        pageNumber: this.state.pageNumber-1,
+                        page: response.data
+                    });
+                    console.log(response.data);
+                })
+            }
+
+            handleNext(){
+                console.log("clicked!");
+                axios.get('/api/data', {
+                    params: {
+                    pNum: this.state.pageNumber+1}
+                }).then((response)=>{
+                    this.setState({
+                        pageNumber: this.state.pageNumber+1,
+                        page: response.data
+                    });
+                    console.log(response.data);
+                })
+            }
+
+            render(){
+                let nextBtn, prevBtn;
+                if(this.state.pageNumber == 1){
+                    prevBtn = <button disabled>Prev</button>
+                }else{
+                    prevBtn = <button onClick={this.handlePrev}>Prev</button>
+                }
+                return (
+                    <div>
+                    <table>
+                        <thead>
+                            <tr><th>Sno</th><th>Col1</th><th>Col2</th></tr>
+                        </thead>
+                        <Row number={this.state.pageNumber} content={this.state.page} />
+                        <tfoot>
+                            <tr><td>Page Number:</td><td>{this.state.pageNumber}</td><td></td></tr>
+                        </tfoot>
+                    </table>
+                    <div>
+                        {prevBtn}
+                        <button onClick={this.handleNext}>Next</button>
+                    </div>
+                    </div>
+                );
+            }
+        }
+        
+        ReactDOM.render(<Table />, document.getElementById('root'))
+    </script>
+
+
+</body>
+</html>
