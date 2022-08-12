@@ -3,20 +3,28 @@ import React from 'react';
 class NameForm extends React.Component{
     constructor(props){
         super(props);
-        this.state = {value: ""};
+        this.state = {textValue: "", selectValue: "me"};
     }
     handleSubmit = (event)=>{
-        alert(`The value is ${this.state.value}`);
+        alert(`The state is ${JSON.stringify(this.state)}`);
         event.preventDefault();
     };
-    handleChange = (event)=>{
-        this.setState({value: event.target.value});
+    handleTextChange = (event)=>{
+        this.setState({textValue: event.target.value});
     };
+    handleSelectChange = (event)=>{
+        this.setState({selectValue: event.target.value});
+    }
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
                 <label htmlFor='txtBox'>Name:</label>
-                <input type='text' id='txtBox' onChange={this.handleChange} />
+                <input type='text' id='txtBox' onChange={this.handleTextChange} />
+                <select value={this.state.selectValue} onChange={this.handleSelectChange}>
+                    <option value='me'>me</option>
+                    <option value='myself'>myself</option>
+                    <option value='I'>I</option>
+                </select>
                 <input type='submit' value='Submit' />
             </form>
         );

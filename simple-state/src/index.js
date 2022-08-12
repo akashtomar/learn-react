@@ -7,6 +7,7 @@ import LoginControl from './components/LoginControl';
 import SampleList from './components/NumberList';
 import NameForm from './components/NameForm';
 import reportWebVitals from './reportWebVitals';
+import Calculator from './components/Calculator';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,6 +17,7 @@ root.render(
     <LoginControl />
     <SampleList />
     <NameForm />
+    <Calculator />
   </React.StrictMode>
 );
 
